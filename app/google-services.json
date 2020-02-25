@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1013548001085",
+    "firebase_url": "https://collaborative-way.firebaseio.com",
+    "project_id": "collaborative-way",
+    "storage_bucket": "collaborative-way.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1013548001085:android:f6f9d528e0bb06a9b54754",
+        "android_client_info": {
+          "package_name": "com.lspsoftwares.collaborativeway"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1013548001085-940mu8n2c72i7vgptucpgvunkrgg8gp5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lspsoftwares.collaborativeway",
+            "certificate_hash": "e88ad1f72a8299dc442a64576301e1a9aab72be4"
+          }
+        },
+        {
+          "client_id": "1013548001085-h8ulm9hke7j5j95cpns2cvatjudqtapp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9Hvf1OtJLl10_qfDWdeM0-Sbfd41_VAQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1013548001085-h8ulm9hke7j5j95cpns2cvatjudqtapp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

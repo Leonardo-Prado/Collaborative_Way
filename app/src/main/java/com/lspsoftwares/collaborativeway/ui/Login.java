@@ -1,6 +1,7 @@
 package com.lspsoftwares.collaborativeway.ui;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.net.ConnectivityManager;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -32,7 +34,9 @@ import java.util.regex.Pattern;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.lspsoftwares.collaborativeway.R;
+import com.lspsoftwares.collaborativeway.SessionData;
 import com.lspsoftwares.collaborativeway.nucleo.entidades.usuarios.Usuario;
+import com.lspsoftwares.collaborativeway.utils.DialogConstrutor;
 
 public class Login  extends AppCompatActivity {
     private EditText edEmail;
@@ -127,7 +131,19 @@ public class Login  extends AppCompatActivity {
                         } else {
                             String menssagemErro = task.getException().getMessage();
                             if(menssagemErro.contains("There is no user record corresponding to this identifier. The user may have been deleted.")) {
-                                criarUsuarioFirebase(email,password);
+                                new DialogConstrutor(context, resources.getString(R.string.login_activity_usuario_nao_encontrado_dialog_titulo), resources.getString(R.string.login_activity_usuario_nao_encontrado_dialog_menssagem), resources.getString(R.string.login_activity_usuario_nao_encontrado_dialog_positive_button), resources.getString(R.string.login_activity_usuario_nao_encontrado_dialog_negative_button), new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        confirmaSenha(email,password);
+                                    }
+                                }, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        loading.setVisibility(View.GONE);
+                                    }
+                                }).show();
+
 
                             }else {
                                 loading.setVisibility(View.GONE);
@@ -143,7 +159,6 @@ public class Login  extends AppCompatActivity {
     }
 
     private void criarUsuarioFirebase(String email,String password) {
-        if(confirmaSenha(password)) {
             auth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
@@ -159,26 +174,35 @@ public class Login  extends AppCompatActivity {
                                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                                 DatabaseReference myRef = database.getReference();
                                 myRef.child("Usuario").child(usuario.getUid()).setValue(usuario);
+
                                 updateUI(user);
                             } else {
                                 // If sign in fails, display a message to the user.
                                 Log.w("Falha", "createUserWithEmail:failure", task.getException());
-                                Toast.makeText(Login.this, resources.getString(R.string.login_activity_senhas_diferentes), Toast.LENGTH_LONG).show();
+                                Toast.makeText(Login.this, resources.getString(R.string.login_activity_falha_ao_criar_usuario), Toast.LENGTH_LONG).show();
                                 updateUI(null);
                             }
-
-                            // ...
                         }
                     });
-        }else{
-            Toast.makeText(Login.this, resources.getString(R.string.login_activity_falha_ao_criar_usuario), Toast.LENGTH_SHORT).show();
-        }
     }
 
-    private boolean confirmaSenha(String password) {
-        boolean igual = false;
-
-        return  igual;
+    private void confirmaSenha(final String email,final String password) {
+        LayoutInflater inflater = (LayoutInflater)context.getSystemService(context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.dialog_confirma_senha, null);
+        final EditText edSenha = view.findViewById(R.id.edRepetirSenha);
+        Button btnConfirmar = view.findViewById(R.id.btnConfirmar);
+        final DialogConstrutor dialog = new DialogConstrutor(context,view,"Repita a senha","");
+        btnConfirmar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(edSenha.getText().toString().equals(password))
+                    criarUsuarioFirebase(email,password);
+                else
+                    Toast.makeText(Login.this, resources.getString(R.string.login_activity_senhas_diferentes), Toast.LENGTH_SHORT).show();
+                dialog.fechar();
+                loading.setVisibility(View.GONE);
+            }
+        });
     }
 
     private void habilitaBotao() {
@@ -198,9 +222,15 @@ public class Login  extends AppCompatActivity {
     }
 
     private void updateUI(FirebaseUser usuario) {
-        if(usuario!=null)
-            carregaTelaPrincipal(usuario.getEmail(),usuario.getUid());
-        else
+        if(usuario!=null) {
+            Usuario user = new Usuario();
+            user.setUid(usuario.getUid());
+            user.setEmail(usuario.getEmail());
+            user.setNome(usuario.getEmail().split("@")[0]);
+            SessionData sessionData = SessionData.getInstance();
+            sessionData.setUsuario(user);
+            carregaTelaPrincipal(usuario.getEmail(), usuario.getUid());
+        }else
             loading.setVisibility(View.GONE);
     }
 

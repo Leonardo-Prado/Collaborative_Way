@@ -17,4 +17,14 @@
     <string name="login_activity_falha_ao_auth">Falha ao efetuar login</string>
     <string name="login_activity_falha_ao_criar_usuario">Falha ao criar novo usuario</string>
     <string name="login_activity_senhas_diferentes">As senhas digitadas não são iguais</string>
+    <string name="login_activity_repetir_senha">Repita a senha para confirmar o registro de novo usuario</string>
+    <string name="login_activity_repetir_senha_editbox">Repita a senha</string>
+    <string name="login_activity_repetir_senha_button">Confirmar</string>
+    <string name="login_activity_usuario_nao_encontrado_dialog_titulo">Usuario não encontrado</string>
+    <string name="login_activity_usuario_nao_encontrado_dialog_menssagem">Usuario não encontrado, deseja registrar novo usuario?</string>
+    <string name="login_activity_usuario_nao_encontrado_dialog_positive_button">Registrar</string>
+    <string name="login_activity_usuario_nao_encontrado_dialog_negative_button">Tentar logar novamente</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
